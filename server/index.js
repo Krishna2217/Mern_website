@@ -4,7 +4,7 @@ const router = require('./router/auth-rout')
 const connectdb = require('./utils/db')
 const port = 5000 || process.env.port
 
-// this is called mouting of router it will go to route localhost:5000/api/auth
+// this is called mounting of router it will go to route localhost:5000/api/auth
 //middleware for json
 app.use(express.json())
 app.use('/api',router)
@@ -17,9 +17,11 @@ app.use('/api',router)
 
 
 //connecting database and server
-connectdb().then(
+connectdb().then( ()=>{
     app.listen(port,()=>{
         console.log(`Server is running on port: localhost:${port}`)
     })
-)
+}).catch(()=>{
+    console.log('error occured in connecting db')
+})
 
