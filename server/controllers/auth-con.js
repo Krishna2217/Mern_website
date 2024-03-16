@@ -1,5 +1,6 @@
 const User = require("../models/user-model");
 const bcrypt = require("bcryptjs");
+
 //-------------------**
 //*logic for home route*
 //--------------------**
@@ -51,7 +52,9 @@ const login = async (req,res) => {
       if(!userFound){
         return res.status(400).json({msg:"enter valid email"})
       }
-      const isPassValid = await bcrypt.compare(password,userFound.password)
+      // const isPassValid = await bcrypt.compare(password,userFound.password)
+      const isPassValid  = await userFound.comparePassword(password)
+
       if(isPassValid){
         res.status(200).json({
         msg:"Login Successful",
@@ -65,7 +68,5 @@ const login = async (req,res) => {
       res.status(500).json({msg:"Internal error occured"})
   }
 }
-
-
 
 module.exports = { home, register,login};
