@@ -37,8 +37,35 @@ const register = async (req, res) => {
   })  
   } 
   catch (err) {
-    console.log(err);
+    res.status(500).json({msg:"Internal error occured"})
   }
 };
 
-module.exports = { home, register };
+//-------------------**
+//*logic for login route*
+//--------------------**
+const login = async (req,res) => {
+  try {
+      const { email,password } = req.body;
+      const userFound =await User.findOne({email:email})
+      if(!userFound){
+        return res.status(400).json({msg:"enter valid email"})
+      }
+      const isPassValid = await bcrypt.compare(password,userFound.password)
+      if(isPassValid){
+        res.status(200).json({
+        msg:"Login Successful",
+        token : await userFound.generateToken(), 
+        userId:userFound._id.toString()
+      })  
+      }else{
+        return res.status(401).json({msg:"Invalid password"})
+      }
+  } catch (error) {
+      res.status(500).json({msg:"Internal error occured"})
+  }
+}
+
+
+
+module.exports = { home, register,login};
