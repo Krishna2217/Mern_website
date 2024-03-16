@@ -1,8 +1,8 @@
+const User = require("../models/user-model");
+const bcrypt = require("bcryptjs");
 //-------------------**
 //*logic for home route*
 //--------------------**
-const User = require("../models/user-model");
-
 const home = async (req, res) => {
   try {
     res.send("Hello home from controllers");
@@ -22,19 +22,16 @@ const register = async (req, res) => {
     if (emailexist) {
       return res.status(400).send({ msg: "email alredy exists" });
     }
-    await User.create(req.body);
-    res.json(req.body);
+    //hash password
+    // const saltround = 10;
+    // const hash_password = await bcrypt.hash(password,saltround)
+    //better way to do this using pre method of userSchema done in usermodel.js
+
+    const userCreated = await User.create({ name, email, phone, password });
+    res.json({ msg: userCreated });
   } catch (err) {
     console.log(err);
   }
 };
-// const login = async (req, res) => {
-//   try {
-//     console.log(req.body);
-//     res.status(200).json(req.body);
-//   } catch (err) {
-//     res.send({ msg: "error occured" });
-//     console.log(err);
-//   }
-// };
+
 module.exports = { home, register };
