@@ -16,7 +16,7 @@ const home = async (req, res) => {
 //--------------------**
 const register = async (req, res) => {
   try {
-    console.log(req.body);
+    // console.log(req.body);
     const { name, email, phone, password } = req.body;
     const emailexist = await User.findOne({ email });
     if (emailexist) {
@@ -28,8 +28,15 @@ const register = async (req, res) => {
     //better way to do this using pre method of userSchema done in usermodel.js
 
     const userCreated = await User.create({ name, email, phone, password });
-    res.json({ msg: userCreated });
-  } catch (err) {
+    // res.status(201).json({ msg: userCreated });
+    //sending data via jsonweb toke
+
+    res.status(201).json({msg:"user created",
+    token : await userCreated.generateToken(), 
+    userId:userCreated._id.toString()
+  })  
+  } 
+  catch (err) {
     console.log(err);
   }
 };
